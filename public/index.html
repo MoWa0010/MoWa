@@ -115,6 +115,16 @@
       <button onclick="copyToClipboard()">نسخ النص</button>
       <button onclick="toggleDirection()">تبديل</button>
 
+      <div
+        id="copyMessage"
+        style="
+          margin-top: 10px;
+          font-size: 16px;
+          opacity: 0;
+          transition: opacity 1s;
+        "
+      ></div>
+
       <textarea id="hiddenTextarea" hidden></textarea>
     </div>
 
@@ -224,16 +234,34 @@
       function copyToClipboard() {
         const text = document.getElementById("outputText").textContent;
         const hiddenTextarea = document.getElementById("hiddenTextarea");
+        const messageDiv = document.getElementById("copyMessage");
+
         hiddenTextarea.value = text;
         hiddenTextarea.select();
-        navigator.clipboard
-          .writeText(text)
-          .then(function () {
-            alert("تم نسخ النص!");
-          })
-          .catch(function () {
-            alert("حدث خطأ أثناء نسخ النص!");
-          });
+
+        navigator.clipboard.writeText(text).then(
+          function () {
+            showMessage("تم نسخ النص بنجاح", "green");
+          },
+          function () {
+            showMessage("فشل في نسخ النص", "red");
+          }
+        );
+      }
+
+      function showMessage(message, color) {
+        const messageDiv = document.getElementById("copyMessage");
+        messageDiv.textContent = message;
+        messageDiv.style.color = color;
+        messageDiv.style.opacity = "1"; // إظهار الرسالة
+        messageDiv.style.display = "block";
+
+        setTimeout(() => {
+          messageDiv.style.opacity = "0"; // بدء التلاشي
+          setTimeout(() => {
+            messageDiv.style.display = "none"; // إخفاء العنصر تمامًا بعد التلاشي
+          }, 1000); // تطابق وقت التلاشي مع transition (1 ثانية)
+        }, 3000); // إبقاء الرسالة مرئية لمدة 5 ثوانٍ
       }
 
       function toggleDirection() {
