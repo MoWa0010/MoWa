@@ -19,6 +19,7 @@
         padding: 0;
         background-color: #f8f9fa;
       }
+
       .container {
         width: 60%;
         margin: 50px auto;
@@ -26,10 +27,54 @@
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
       }
+
+      .textarea-wrapper {
+        position: relative;
+      }
+
       textarea {
         width: 90%;
-        height: 120px;
+        height: 150px;
+        margin-bottom: 20px;
+        padding: 10px;
+        padding-bottom: 25px;
+        font-size: 18px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        resize: none;
+        font-family: mowa;
+        line-height: 1.8;
+        direction: rtl;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .icons {
+        position: absolute;
+        bottom: 10%;
+        left: 4%;
+        display: flex;
+        gap: 1%;
+        z-index: 10;
+      }
+
+      .icon {
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: 0.3s;
+      }
+
+      .icon:hover {
+        color: white;
+      }
+
+      .output-box {
+        width: 90%;
+        min-height: 50px;
         margin-bottom: 20px;
         padding: 10px;
         font-size: 18px;
@@ -37,20 +82,15 @@
         border-radius: 5px;
         resize: none;
         font-family: mowa;
-      }
-      .output-box {
-        width: 90%;
-        min-height: 50px;
         background: #e9ecef;
-        padding: 10px;
-        font-size: 18px;
-        border-radius: 5px;
         text-align: left;
         word-wrap: break-word;
-        margin: 0 auto;
         display: block;
-        font-family: mowa;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.8;
       }
+
       button {
         margin-top: 10px;
         padding: 10px 20px;
@@ -66,7 +106,6 @@
         background: #0056b3;
       }
 
-      /* تنسيق العناوين */
       .language-title {
         font-size: 20px;
         font-weight: bold;
@@ -87,14 +126,61 @@
         background-color: #343a40;
         transform: translateY(-50%);
       }
-
-      .language-title.arabic {
-        color: #343a40;
-        text-transform: uppercase;
+      .message {
+        margin-top: 10px;
+        font-size: 16px;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s;
       }
-      .language-title.mowa {
-        color: #343a40;
-        text-transform: uppercase;
+
+      .message.success {
+        color: #28a745;
+      }
+
+      .message.error {
+        color: #dc3545;
+      }
+      /* Media Query for mobile devices */
+      @media only screen and (max-width: 768px) {
+        body {
+          font-size: 14px; /* تقليل حجم الخط على الأجهزة المحمولة */
+        }
+
+        .container {
+          width: 90%; /* تعيين عرض الحاوية ليكون 90% لزيادة المساحة */
+          padding: 15px;
+        }
+
+        .textarea-wrapper {
+          position: relative;
+          margin-bottom: 20px;
+          padding: 10px;
+          padding-bottom: 25px;
+        }
+
+        textarea {
+          width: 90%; /* تعيين العرض ليكون 100% ليملأ الشاشة */
+          height: 150px;
+          font-size: 16px; /* تقليل حجم الخط داخل النص */
+        }
+
+        .output-box {
+          width: 90%; /* تعيين عرض الـ output ليكون 100% */
+        }
+
+        .language-title {
+          font-size: 18px; /* تقليل حجم العنوان */
+        }
+
+        .icons {
+          position: absolute;
+          bottom: 20%;
+          left: 6%;
+          display: flex;
+          gap: 1%;
+          z-index: 10;
+        }
       }
     </style>
   </head>
@@ -105,7 +191,41 @@
       <div class="language-title arabic" id="inputTitle">
         :النص المدخل (عربي)
       </div>
-      <textarea id="inputText" placeholder="اكتب النص هنا..."></textarea>
+
+      <!-- Wrapper to position icons inside the textarea -->
+      <div class="textarea-wrapper">
+        <div class="icons">
+          <!-- علامة إكس لحذف النص -->
+          <span class="icon" onclick="clearText()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="20px"
+              viewBox="0 -960 960 960"
+              width="20px"
+              fill="#5f6368"
+            >
+              <path
+                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+              />
+            </svg>
+          </span>
+          <!-- علامة الحافظة للصق النص -->
+          <span class="icon" onclick="pasteText()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="20px"
+              viewBox="0 -960 960 960"
+              width="20px"
+              fill="#5f6368"
+            >
+              <path
+                d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z"
+              />
+            </svg>
+          </span>
+        </div>
+        <textarea id="inputText" placeholder="اكتب النص هنا..."></textarea>
+      </div>
 
       <div class="language-title mowa" id="outputTitle">
         :(MoWa) النص المترجم
@@ -115,17 +235,7 @@
       <button onclick="copyToClipboard()">نسخ النص</button>
       <button onclick="toggleDirection()">تبديل</button>
 
-      <div
-        id="copyMessage"
-        style="
-          margin-top: 10px;
-          font-size: 16px;
-          opacity: 0;
-          transition: opacity 1s;
-        "
-      ></div>
-
-      <textarea id="hiddenTextarea" hidden></textarea>
+      <div id="message" class="message"></div>
     </div>
 
     <script>
@@ -209,59 +319,56 @@
 
       let isArabicToMowa = true;
 
+      function updateDirection(element) {
+        const isArabic = /[\u0600-\u06FF]/.test(
+          element.value || element.textContent
+        );
+        element.dir = isArabic ? "rtl" : "ltr";
+        element.style.textAlign = isArabic ? "right" : "left";
+      }
+
       function translate(text) {
-        if (isArabicToMowa) {
-          return text
-            .split("")
-            .map((char) => arabicToMowaMap[char] || char)
-            .join("");
-        } else {
-          return text
-            .split("")
-            .map((char) => mowaToArabicMap[char] || char)
-            .join("");
-        }
+        return text
+          .split("")
+          .map((char) =>
+            isArabicToMowa
+              ? arabicToMowaMap[char] || char
+              : mowaToArabicMap[char] || char
+          )
+          .join("");
       }
 
       document
         .getElementById("inputText")
         .addEventListener("input", function () {
+          updateDirection(this);
           document.getElementById("outputText").textContent = translate(
             this.value
           );
+          updateDirection(document.getElementById("outputText"));
         });
 
       function copyToClipboard() {
         const text = document.getElementById("outputText").textContent;
-        const hiddenTextarea = document.getElementById("hiddenTextarea");
-        const messageDiv = document.getElementById("copyMessage");
-
-        hiddenTextarea.value = text;
-        hiddenTextarea.select();
-
-        navigator.clipboard.writeText(text).then(
-          function () {
-            showMessage("تم نسخ النص بنجاح", "green");
-          },
-          function () {
-            showMessage("فشل في نسخ النص", "red");
-          }
-        );
+        navigator.clipboard
+          .writeText(text)
+          .then(() => showMessage("تم نسخ النص بنجاح", "success"))
+          .catch(() => showMessage("فشل نسخ النص", "error"));
       }
 
-      function showMessage(message, color) {
-        const messageDiv = document.getElementById("copyMessage");
-        messageDiv.textContent = message;
-        messageDiv.style.color = color;
-        messageDiv.style.opacity = "1"; // إظهار الرسالة
-        messageDiv.style.display = "block";
+      function showMessage(text, type) {
+        const message = document.getElementById("message");
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = "block";
+        message.style.opacity = "1";
 
         setTimeout(() => {
-          messageDiv.style.opacity = "0"; // بدء التلاشي
+          message.style.opacity = "0";
           setTimeout(() => {
-            messageDiv.style.display = "none"; // إخفاء العنصر تمامًا بعد التلاشي
-          }, 1000); // تطابق وقت التلاشي مع transition (1 ثانية)
-        }, 3000); // إبقاء الرسالة مرئية لمدة 5 ثوانٍ
+            message.style.display = "none";
+          }, 500);
+        }, 2000);
       }
 
       function toggleDirection() {
@@ -270,25 +377,39 @@
         const inputText = document.getElementById("inputText");
         const outputText = document.getElementById("outputText");
 
-        // تبديل القيم بين الحقلين
         const tempText = inputText.value;
         inputText.value = outputText.textContent;
         outputText.textContent = tempText;
 
-        // إعادة ترجمة النص بناءً على الاتجاه الجديد
         outputText.textContent = translate(inputText.value);
+        updateDirection(inputText);
+        updateDirection(outputText);
 
-        // تغيير العناوين بناءً على الاتجاه
-        const inputTitle = document.getElementById("inputTitle");
-        const outputTitle = document.getElementById("outputTitle");
+        document.getElementById("inputTitle").textContent = isArabicToMowa
+          ? ":النص المدخل (عربي)"
+          : ":(MoWa) النص المدخل";
+        document.getElementById("outputTitle").textContent = isArabicToMowa
+          ? ":(MoWa) النص المترجم"
+          : ":النص المترجم (عربي)";
+      }
 
-        if (isArabicToMowa) {
-          inputTitle.textContent = ":النص المدخل (عربي)";
-          outputTitle.textContent = ":(MoWa) النص المترجم";
-        } else {
-          inputTitle.textContent = ":(MoWa) النص المدخل";
-          outputTitle.textContent = ":النص المترجم (عربي)";
-        }
+      // دالة لمسح النص
+      function clearText() {
+        document.getElementById("inputText").value = "";
+        document.getElementById("outputText").textContent = "";
+      }
+
+      // دالة للصق النص من الحافظة
+      function pasteText() {
+        navigator.clipboard
+          .readText()
+          .then((text) => {
+            document.getElementById("inputText").value = text;
+            document.getElementById("outputText").textContent = translate(text);
+          })
+          .catch((err) => {
+            alert("فشل في لصق النص");
+          });
       }
     </script>
   </body>
